@@ -1,9 +1,42 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from . models import *
 from . forms import *
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import UpdateView, DeleteView
 # Create your views here.
 # def home(request):
 #     return render(request,'home.html')
+
+
+class TaskListView(ListView):
+    model = Task
+    template_name = 'home.html'
+    context_object_name = 'task1'
+
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = 'detail.html'
+    context_object_name = 'task1'
+
+
+class TaskUpdateView(UpdateView):
+    model = Task
+    template_name = 'update.html'
+    context_object_name = 'task1'
+    fields = ('name', 'priority', 'date')
+
+    def get_success_url(self):
+        return reverse_lazy('dtlview', kwargs={'pk': self.object.id})
+
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    template_name = 'delete.html'
+    success_url = reverse_lazy('lstview')
+
 
 def add(request):
     task1 = Task.objects.all()
